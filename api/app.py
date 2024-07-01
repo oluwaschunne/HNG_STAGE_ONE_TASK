@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/api/hello', methods=['GET'])
 def hello():
-    visitor_name = request.args.get('visitor_name', 'Guest')
+    visitor_name = request.args.get("visitor_name", "Guest").strip('"')
     client_ip = request.remote_addr
     api_key = "9ebe49d50b414663bfd91107240107"
 
