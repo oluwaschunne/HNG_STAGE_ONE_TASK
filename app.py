@@ -1,5 +1,9 @@
 from flask import Flask, request, jsonify
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -7,10 +11,11 @@ app = Flask(__name__)
 def hello():
     visitor_name = request.args.get("visitor_name", "Guest").strip('"')
     client_ip = request.remote_addr
-    api_key = "9ebe49d50b414663bfd91107240107"
 
     if client_ip == "127.0.0.1":
-        client_ip = "8.8.8.8"
+        client_ip = "41.71.156.255"
+
+    api_key = os.getenv('WEATHER_API_KEY')
 
     # Get weather and location information
     weather_response = requests.get(f'http://api.weatherapi.com/v1/current.json?key={api_key}&q={client_ip}')
