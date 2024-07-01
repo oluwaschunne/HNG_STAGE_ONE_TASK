@@ -10,7 +10,8 @@ app = Flask(__name__)
 @app.route('/api/hello', methods=['GET'])
 def hello():
     visitor_name = request.args.get("visitor_name", "Guest").strip('"')
-    client_ip = request.remote_addr
+    
+    client_ip = request.environ.get('HTTP_X_FORWARDED_FOR') or request.remote_addr
 
     if client_ip == "127.0.0.1":
         client_ip = "41.71.156.255"
