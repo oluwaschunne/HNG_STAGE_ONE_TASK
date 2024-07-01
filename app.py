@@ -7,14 +7,24 @@ load_dotenv()
 
 app = Flask(__name__)
 
+def fetch_public_ip():
+    response = requests.get("https://api.ipify.org?format=json")
+    data = response.json()
+    return data["ip"]
+
+
 @app.route('/api/hello', methods=['GET'])
 def hello():
     visitor_name = request.args.get("visitor_name", "Guest").strip('"')
-    
-    client_ip = request.environ.get('HTTP_X_FORWARDED_FOR') or request.remote_addr
 
+    if request.headers.get("X-Forwarded-For"):
+        client_ip = request.headers.get("X-Forwarded-For").split(",")[0].strip()
+    else:
+        client_ip = request.remote_addr
+
+    # If running locally, use the public IP for demonstration purposes
     if client_ip == "127.0.0.1":
-        client_ip = "41.71.156.255"
+        client_ip = fetch_public_ip()
 
     api_key = os.getenv('WEATHER_API_KEY')
 
